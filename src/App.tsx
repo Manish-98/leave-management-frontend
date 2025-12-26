@@ -1,11 +1,7 @@
-import './App.css'
+import { LeaveManagement } from './components/LeaveManagement';
 
 function App() {
-
-  return (
-    <>
-    </>
-  )
+  return <LeaveManagement />;
 }
 
-export default App
+export default App;
