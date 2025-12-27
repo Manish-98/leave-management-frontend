@@ -1,9 +1,7 @@
 // Leave Type (matches API)
 export const LeaveType = {
   ANNUAL_LEAVE: 'ANNUAL_LEAVE',
-  SICK_LEAVE: 'SICK_LEAVE',
-  PERSONAL_LEAVE: 'PERSONAL_LEAVE',
-  UNPAID_LEAVE: 'UNPAID_LEAVE',
+  OPTIONAL_HOLIDAY: 'OPTIONAL_HOLIDAY',
 } as const;
 
 export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType];

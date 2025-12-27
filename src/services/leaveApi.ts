@@ -45,9 +45,7 @@ function buildQueryParams(
 function mapLeaveTypeDisplay(type: LeaveType): string {
   const typeMap: Record<LeaveType, string> = {
     [LeaveType.ANNUAL_LEAVE]: 'Annual',
-    [LeaveType.SICK_LEAVE]: 'Sick',
-    [LeaveType.PERSONAL_LEAVE]: 'Personal',
-    [LeaveType.UNPAID_LEAVE]: 'Unpaid',
+    [LeaveType.OPTIONAL_HOLIDAY]: 'Optional Holiday',
   };
   return typeMap[type] || type;
 }

@@ -64,9 +64,7 @@ export function getStatusBadgeClass(status: string): string {
 export function getLeaveTypeBadgeClass(leaveType: string): string {
   const typeMap: Record<string, string> = {
     Annual: 'bg-primary-100 text-primary-700 border-primary-200',
-    Sick: 'bg-success-100 text-success-700 border-success-200',
-    Personal: 'bg-purple-100 text-purple-700 border-purple-200',
-    Unpaid: 'bg-gray-100 text-gray-700 border-gray-200',
+    'Optional Holiday': 'bg-purple-100 text-purple-700 border-purple-200',
   };
   return typeMap[leaveType] || 'bg-gray-100 text-gray-700 border-gray-200';
 }

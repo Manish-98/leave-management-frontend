@@ -109,9 +109,7 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
           >
             <option value="All">All Types</option>
             <option value={LeaveType.ANNUAL_LEAVE}>Annual</option>
-            <option value={LeaveType.SICK_LEAVE}>Sick</option>
-            <option value={LeaveType.PERSONAL_LEAVE}>Personal</option>
-            <option value={LeaveType.UNPAID_LEAVE}>Unpaid</option>
+            <option value={LeaveType.OPTIONAL_HOLIDAY}>Optional Holiday</option>
           </select>
         </div>
       </div>

@@ -6,9 +6,11 @@ import { Header } from './Header';
 import { SectionHeader } from './SectionHeader';
 import { FilterBar } from './FilterBar';
 import { LeaveRequestsTable } from './LeaveRequestsTable';
+import { BulkUploadModal } from './BulkUploadModal';
 
 export function LeaveManagement() {
   const [currentView, setCurrentView] = useState<ViewMode>('admin');
+  const [isBulkUploadModalOpen, setIsBulkUploadModalOpen] = useState(false);
 
   const {
     leaveRequests,
@@ -20,6 +22,7 @@ export function LeaveManagement() {
     filters,
     updateFilters,
     goToPage,
+    refetch,
   } = useLeaveRequests();
 
   // Calculate pending count
@@ -43,6 +46,19 @@ export function LeaveManagement() {
     setCurrentView(view);
   };
 
+  const handleOpenBulkUpload = () => {
+    setIsBulkUploadModalOpen(true);
+  };
+
+  const handleCloseBulkUpload = () => {
+    setIsBulkUploadModalOpen(false);
+  };
+
+  const handleBulkUploadSuccess = () => {
+    // Refresh leave requests after successful upload
+    refetch();
+  };
+
   if (currentView === 'employee') {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
@@ -62,7 +78,11 @@ export function LeaveManagement() {
         <Header currentView={currentView} onViewSwitch={handleViewSwitch} />
 
         <div className="mb-6">
-          <SectionHeader title="Pending Approvals" pendingCount={pendingCount} />
+          <SectionHeader
+            title="Pending Approvals"
+            pendingCount={pendingCount}
+            onBulkUpload={handleOpenBulkUpload}
+          />
         </div>
 
         <FilterBar filters={filters} onFilterChange={updateFilters} />
@@ -77,6 +97,12 @@ export function LeaveManagement() {
           onPageChange={goToPage}
           onApprove={handleApprove}
           onReject={handleReject}
+        />
+
+        <BulkUploadModal
+          isOpen={isBulkUploadModalOpen}
+          onClose={handleCloseBulkUpload}
+          onUploadSuccess={handleBulkUploadSuccess}
         />
       </div>
     </div>
