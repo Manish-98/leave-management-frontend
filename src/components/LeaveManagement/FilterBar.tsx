@@ -1,5 +1,4 @@
 import type { LeaveFilters } from '../../types/leave';
-import { LeaveStatus, LeaveType } from '../../types/leave';
 
 interface FilterBarProps {
   filters: LeaveFilters;
@@ -69,47 +68,6 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
             <option value="Q2">Q2</option>
             <option value="Q3">Q3</option>
             <option value="Q4">Q4</option>
-          </select>
-        </div>
-
-        {/* Status Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Status
-          </label>
-          <select
-            value={filters.status || 'All'}
-            onChange={(e) =>
-              onFilterChange({
-                status: e.target.value === 'All' ? undefined : (e.target.value as LeaveStatus),
-              })
-            }
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option value="All">All Status</option>
-            <option value={LeaveStatus.PENDING}>Pending</option>
-            <option value={LeaveStatus.APPROVED}>Approved</option>
-            <option value={LeaveStatus.REJECTED}>Rejected</option>
-          </select>
-        </div>
-
-        {/* Leave Type Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Leave Type
-          </label>
-          <select
-            value={filters.leaveType || 'All'}
-            onChange={(e) =>
-              onFilterChange({
-                leaveType: e.target.value === 'All' ? undefined : (e.target.value as LeaveType),
-              })
-            }
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option value="All">All Types</option>
-            <option value={LeaveType.ANNUAL_LEAVE}>Annual</option>
-            <option value={LeaveType.OPTIONAL_HOLIDAY}>Optional Holiday</option>
           </select>
         </div>
       </div>

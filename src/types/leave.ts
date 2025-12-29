@@ -103,8 +103,6 @@ export interface LeaveFilters {
   userId?: string;
   year?: number;
   quarter?: 'Q1' | 'Q2' | 'Q3' | 'Q4';
-  status?: LeaveStatus;
-  leaveType?: LeaveType;
 }
 
 // Pagination params for API
