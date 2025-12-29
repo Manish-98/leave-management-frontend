@@ -7,6 +7,7 @@ import { SectionHeader } from './SectionHeader';
 import { FilterBar } from './FilterBar';
 import { LeaveRequestsTable } from './LeaveRequestsTable';
 import { BulkUploadModal } from './BulkUploadModal';
+import { OptionalHolidayManagement } from './OptionalHolidayManagement';
 
 export function LeaveManagement() {
   const [currentView, setCurrentView] = useState<ViewMode>('admin');
@@ -98,6 +99,8 @@ export function LeaveManagement() {
           onApprove={handleApprove}
           onReject={handleReject}
         />
+
+        <OptionalHolidayManagement />
 
         <BulkUploadModal
           isOpen={isBulkUploadModalOpen}
