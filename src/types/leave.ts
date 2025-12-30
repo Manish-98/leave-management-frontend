@@ -111,5 +111,5 @@ export interface PaginationParams {
   size: number;
 }
 
-// View mode (admin vs employee)
-export type ViewMode = 'admin' | 'employee';
+// View mode (admin vs employee vs employees)
+export type ViewMode = 'admin' | 'employee' | 'employees';

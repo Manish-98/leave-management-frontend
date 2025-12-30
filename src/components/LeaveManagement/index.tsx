@@ -8,6 +8,7 @@ import { FilterBar } from './FilterBar';
 import { LeaveRequestsTable } from './LeaveRequestsTable';
 import { BulkUploadModal } from './BulkUploadModal';
 import { OptionalHolidayManagement } from './OptionalHolidayManagement';
+import { EmployeeManagement } from '../EmployeeManagement';
 
 export function LeaveManagement() {
   const [currentView, setCurrentView] = useState<ViewMode>('admin');
@@ -68,6 +69,17 @@ export function LeaveManagement() {
           <div className="bg-white rounded-lg p-12 text-center">
             <p className="text-gray-600 text-lg">Employee View coming soon...</p>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentView === 'employees') {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto">
+          <Header currentView={currentView} onViewSwitch={handleViewSwitch} />
+          <EmployeeManagement />
         </div>
       </div>
     );
