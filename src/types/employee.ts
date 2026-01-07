@@ -15,6 +15,7 @@ export interface Employee {
   dateOfJoining: string; // ISO date string
   active: boolean;
   carryForwardLeaves: Record<string, number>; // e.g., { "2023": 5, "2024": 3 }
+  region: 'PUNE' | 'BANGALORE' | 'HYDERABAD';
   createdAt: string; // ISO datetime string
   updatedAt: string; // ISO datetime string
 }
@@ -30,6 +31,7 @@ export interface EmployeeCreateRequest {
   dateOfJoining: string; // ISO date string
   active?: boolean;
   carryForwardLeaves?: Record<string, number>;
+  region: 'PUNE' | 'BANGALORE' | 'HYDERABAD';
 }
 
 /**

@@ -6,7 +6,7 @@ import type { OptionalHoliday } from '../../types/optionalHoliday';
 interface OptionalHolidayModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: { date: string; name: string; description: string }) => Promise<void>;
+  onSave: (data: { date: string; name: string; description: string; region: 'PUNE' | 'BANGALORE' | 'HYDERABAD' }) => Promise<void>;
   holiday?: OptionalHoliday | null;
 }
 
@@ -19,6 +19,7 @@ export function OptionalHolidayModal({
   const [date, setDate] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [region, setRegion] = useState<'PUNE' | 'BANGALORE' | 'HYDERABAD'>('PUNE');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,10 +30,12 @@ export function OptionalHolidayModal({
         setDate(holiday.date);
         setName(holiday.name);
         setDescription(holiday.description || '');
+        setRegion(holiday.region);
       } else {
         setDate('');
         setName('');
         setDescription('');
+        setRegion('PUNE');
       }
       setError(null);
     }
@@ -66,7 +69,12 @@ export function OptionalHolidayModal({
     setError(null);
 
     try {
-      await onSave({ date: date.trim(), name: name.trim(), description: description.trim() });
+      await onSave({
+        date: date.trim(),
+        name: name.trim(),
+        description: description.trim(),
+        region
+      });
       onClose();
     } catch (err: any) {
       setError(err.message || 'Failed to save optional holiday');
@@ -147,6 +155,23 @@ export function OptionalHolidayModal({
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"
           />
           <p className="text-xs text-gray-500 mt-1">{description.length}/500 characters</p>
+        </div>
+
+        {/* Region Field */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Region <span className="text-error-500">*</span>
+          </label>
+          <select
+            value={region}
+            onChange={(e) => setRegion(e.target.value as 'PUNE' | 'BANGALORE' | 'HYDERABAD')}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            required
+          >
+            <option value="PUNE">Pune</option>
+            <option value="BANGALORE">Bangalore</option>
+            <option value="HYDERABAD">Hyderabad</option>
+          </select>
         </div>
       </form>
     </Modal>

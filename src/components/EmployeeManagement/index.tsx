@@ -34,7 +34,6 @@ export function EmployeeManagement() {
   const [editingEmployee, setEditingEmployee] = useState<EmployeeDisplay | null>(null);
   const [isBulkUploadModalOpen, setIsBulkUploadModalOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<EmployeeDisplay | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleOpenCreateModal = () => {
@@ -74,7 +73,6 @@ export function EmployeeManagement() {
   const handleConfirmDelete = async () => {
     if (!employeeToDelete) return;
 
-    setIsSubmitting(true);
     setSubmitError(null);
 
     try {
@@ -83,13 +81,10 @@ export function EmployeeManagement() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to deactivate employee';
       setSubmitError(errorMessage);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const handleSubmitEmployee = async (data: EmployeeCreateRequest) => {
-    setIsSubmitting(true);
     setSubmitError(null);
 
     try {
@@ -102,8 +97,6 @@ export function EmployeeManagement() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save employee';
       setSubmitError(errorMessage);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -205,9 +198,9 @@ export function EmployeeManagement() {
         isOpen={!!employeeToDelete}
         onClose={handleCloseDeleteConfirm}
         onConfirm={handleConfirmDelete}
+        title="Deactivate Employee"
         message={`Are you sure you want to deactivate "${employeeToDelete?.name}"? This action can be reverted by reactivating the employee.`}
         variant="warning"
-        isLoading={isSubmitting}
       />
 
       {/* Submit Error Modal */}
@@ -216,6 +209,7 @@ export function EmployeeManagement() {
           isOpen={!!submitError}
           onClose={() => setSubmitError(null)}
           onConfirm={() => setSubmitError(null)}
+          title="Error"
           message={submitError}
           variant="danger"
           confirmText="OK"

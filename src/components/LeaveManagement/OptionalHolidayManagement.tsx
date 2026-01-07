@@ -72,7 +72,7 @@ export function OptionalHolidayManagement() {
     setHolidayToDelete(null);
   };
 
-  const handleSave = async (data: { date: string; name: string; description: string }) => {
+  const handleSave = async (data: { date: string; name: string; description: string; region: 'PUNE' | 'BANGALORE' | 'HYDERABAD' }) => {
     if (editingHoliday) {
       await updateOptionalHoliday(editingHoliday.id, data);
     } else {

@@ -61,6 +61,9 @@ export function OptionalHolidayTable({
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Description
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Region
+              </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
@@ -77,6 +80,9 @@ export function OptionalHolidayTable({
                 </td>
                 <td className="px-6 py-2 text-sm text-gray-600 max-w-md truncate">
                   {holiday.description || '-'}
+                </td>
+                <td className="px-6 py-2 whitespace-nowrap text-sm text-gray-900">
+                  {holiday.region}
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap text-right text-sm font-medium">
                   <button

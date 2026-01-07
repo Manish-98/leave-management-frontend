@@ -3,7 +3,6 @@
  * Displays employee list in table format with actions and pagination
  */
 
-import { Button } from '../common/Button';
 import { ActiveStatusBadge } from './ActiveStatusBadge';
 import { Pagination } from '../LeaveManagement/Pagination';
 import type { EmployeeDisplay } from '../../types/employee';
@@ -73,6 +72,9 @@ export function EmployeeTable({
               Date of Joining
             </th>
             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Region
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Status
             </th>
             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -101,6 +103,9 @@ export function EmployeeTable({
               </td>
               <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-700">
                 {employee.dateOfJoiningDisplay}
+              </td>
+              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                {employee.region}
               </td>
               <td className="px-4 py-2 whitespace-nowrap">
                 <ActiveStatusBadge active={employee.active} />

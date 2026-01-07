@@ -68,10 +68,10 @@ export function parseEmployeeCsv(file: File): Promise<BulkUploadResultRow[]> {
  * Generate CSV template for employee bulk upload
  */
 export function generateEmployeeCsvTemplate(): string {
-  const headers = ['name', 'slackId', 'googleId', 'slackDisplayName', 'dateOfJoining', 'active', 'carryForwardLeaves'];
-  const exampleRow1 = ['John Doe', 'johndoe', '', 'John Doe', '2025-01-15', 'true', '{"2024": 5}'];
-  const exampleRow2 = ['Jane Smith', '', 'janesmith@gmail.com', 'Jane Smith', '2025-02-01', 'true', '{}'];
-  const exampleRow3 = ['Bob Johnson', 'bjohnson', '', 'Bob Johnson', '2024-06-15', 'false', '{"2023": 3, "2024": 2}'];
+  const headers = ['name', 'slackId', 'googleId', 'slackDisplayName', 'dateOfJoining', 'region', 'active', 'carryForwardLeaves'];
+  const exampleRow1 = ['John Doe', 'johndoe', '', 'John Doe', '2025-01-15', 'PUNE', 'true', '{"2024": 5}'];
+  const exampleRow2 = ['Jane Smith', '', 'janesmith@gmail.com', 'Jane Smith', '2025-02-01', 'BANGALORE', 'true', '{}'];
+  const exampleRow3 = ['Bob Johnson', 'bjohnson', '', 'Bob Johnson', '2024-06-15', 'HYDERABAD', 'false', '{"2023": 3, "2024": 2}'];
 
   return [
     headers.join(','),
@@ -114,6 +114,15 @@ export function validateEmployeeRow(row: Record<string, string>): { valid: boole
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(row.dateOfJoining)) {
       errors.push('Date of joining must be in YYYY-MM-DD format');
+    }
+  }
+
+  if (!row.region || row.region.trim() === '') {
+    errors.push('Region is required');
+  } else {
+    const validRegions = ['PUNE', 'BANGALORE', 'HYDERABAD'];
+    if (!validRegions.includes(row.region.trim().toUpperCase())) {
+      errors.push('Region must be one of: PUNE, BANGALORE, HYDERABAD');
     }
   }
 

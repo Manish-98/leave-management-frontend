@@ -18,20 +18,33 @@ interface EmployeeModalProps {
 interface FormErrors {
   name?: string;
   dateOfJoining?: string;
+  region?: string;
   carryForwardLeaves?: string;
+}
+
+interface FormDataState {
+  name: string;
+  slackId: string;
+  googleId: string;
+  slackDisplayName: string;
+  dateOfJoining: string;
+  active: boolean;
+  carryForwardLeaves: string;
+  region: 'PUNE' | 'BANGALORE' | 'HYDERABAD';
 }
 
 export function EmployeeModal({ isOpen, onClose, onSubmit, employee }: EmployeeModalProps) {
   const isEditing = !!employee;
 
-  const [formData, setFormData] = useState<EmployeeCreateRequest>({
+  const [formData, setFormData] = useState<FormDataState>({
     name: '',
     slackId: '',
     googleId: '',
     slackDisplayName: '',
     dateOfJoining: '',
     active: true,
-    carryForwardLeaves: undefined,
+    carryForwardLeaves: '',
+    region: 'PUNE',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -49,7 +62,8 @@ export function EmployeeModal({ isOpen, onClose, onSubmit, employee }: EmployeeM
           slackDisplayName: employee.slackDisplayName || '',
           dateOfJoining: employee.dateOfJoining.split('T')[0], // Format to YYYY-MM-DD
           active: employee.active,
-          carryForwardLeaves: employee.carryForwardLeaves,
+          carryForwardLeaves: employee.carryForwardLeaves ? JSON.stringify(employee.carryForwardLeaves, null, 2) : '',
+          region: employee.region,
         });
       } else {
         // Creating mode - reset to default values
@@ -60,14 +74,15 @@ export function EmployeeModal({ isOpen, onClose, onSubmit, employee }: EmployeeM
           slackDisplayName: '',
           dateOfJoining: '',
           active: true,
-          carryForwardLeaves: undefined,
+          carryForwardLeaves: '',
+          region: 'PUNE',
         });
       }
       setErrors({});
     }
   }, [isOpen, employee]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -96,8 +111,12 @@ export function EmployeeModal({ isOpen, onClose, onSubmit, employee }: EmployeeM
       }
     }
 
+    if (!formData.region) {
+      newErrors.region = 'Region is required';
+    }
+
     // Validate carryForwardLeaves JSON
-    if (formData.carryForwardLeaves) {
+    if (formData.carryForwardLeaves && formData.carryForwardLeaves.trim()) {
       try {
         JSON.parse(formData.carryForwardLeaves);
       } catch {
@@ -121,13 +140,14 @@ export function EmployeeModal({ isOpen, onClose, onSubmit, employee }: EmployeeM
         name: formData.name,
         dateOfJoining: formData.dateOfJoining,
         active: formData.active,
+        region: formData.region,
       };
 
       if (formData.slackId) dataToSubmit.slackId = formData.slackId;
       if (formData.googleId) dataToSubmit.googleId = formData.googleId;
       if (formData.slackDisplayName) dataToSubmit.slackDisplayName = formData.slackDisplayName;
-      if (formData.carryForwardLeaves) {
-        dataToSubmit.carryForwardLeaves = JSON.parse(formData.carryForwardLeaves as string);
+      if (formData.carryForwardLeaves.trim()) {
+        dataToSubmit.carryForwardLeaves = JSON.parse(formData.carryForwardLeaves);
       }
 
       await onSubmit(dataToSubmit);
@@ -242,6 +262,27 @@ export function EmployeeModal({ isOpen, onClose, onSubmit, employee }: EmployeeM
           {errors.dateOfJoining && <p className="mt-1 text-xs text-error-600">{errors.dateOfJoining}</p>}
         </div>
 
+        {/* Region */}
+        <div>
+          <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-1">
+            Region <span className="text-error-500">*</span>
+          </label>
+          <select
+            id="region"
+            name="region"
+            value={formData.region}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
+              errors.region ? 'border-error-500' : 'border-gray-300'
+            }`}
+          >
+            <option value="PUNE">Pune</option>
+            <option value="BANGALORE">Bangalore</option>
+            <option value="HYDERABAD">Hyderabad</option>
+          </select>
+          {errors.region && <p className="mt-1 text-xs text-error-600">{errors.region}</p>}
+        </div>
+
         {/* Active Status */}
         <div className="flex items-center">
           <input
@@ -265,11 +306,7 @@ export function EmployeeModal({ isOpen, onClose, onSubmit, employee }: EmployeeM
           <textarea
             id="carryForwardLeaves"
             name="carryForwardLeaves"
-            value={
-              formData.carryForwardLeaves
-                ? JSON.stringify(formData.carryForwardLeaves, null, 2)
-                : ''
-            }
+            value={formData.carryForwardLeaves}
             onChange={handleChange}
             rows={3}
             className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent font-mono ${
