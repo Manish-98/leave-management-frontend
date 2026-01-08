@@ -5,13 +5,15 @@
 
 import { useState } from 'react';
 import { useEmployees } from '../../hooks/useEmployees';
+import { useToast } from '../../contexts/ToastContext';
 import { EmployeeFilterBar } from './EmployeeFilterBar';
 import { EmployeeTable } from './EmployeeTable';
 import { EmployeeModal } from './EmployeeModal';
 import { EmployeeBulkUploadModal } from './EmployeeBulkUploadModal';
+import { SlackMappingModal } from './SlackMappingModal';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 import { Button } from '../common/Button';
-import type { EmployeeDisplay, EmployeeCreateRequest } from '../../types/employee';
+import type { EmployeeDisplay, EmployeeCreateRequest, Employee } from '../../types/employee';
 
 export function EmployeeManagement() {
   const {
@@ -30,28 +32,27 @@ export function EmployeeManagement() {
     deactivateExistingEmployee,
   } = useEmployees();
 
+  const { showSuccess, showError } = useToast();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<EmployeeDisplay | null>(null);
   const [isBulkUploadModalOpen, setIsBulkUploadModalOpen] = useState(false);
+  const [isSlackMappingModalOpen, setIsSlackMappingModalOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<EmployeeDisplay | null>(null);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleOpenCreateModal = () => {
     setEditingEmployee(null);
     setIsModalOpen(true);
-    setSubmitError(null);
   };
 
   const handleOpenEditModal = (employee: EmployeeDisplay) => {
     setEditingEmployee(employee);
     setIsModalOpen(true);
-    setSubmitError(null);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingEmployee(null);
-    setSubmitError(null);
   };
 
   const handleOpenBulkUpload = () => {
@@ -60,6 +61,18 @@ export function EmployeeManagement() {
 
   const handleCloseBulkUpload = () => {
     setIsBulkUploadModalOpen(false);
+  };
+
+  const handleOpenSlackMapping = () => {
+    setIsSlackMappingModalOpen(true);
+  };
+
+  const handleCloseSlackMapping = () => {
+    setIsSlackMappingModalOpen(false);
+  };
+
+  const handleSlackMappingComplete = () => {
+    refetch();
   };
 
   const handleOpenDeleteConfirm = (employee: EmployeeDisplay) => {
@@ -73,30 +86,29 @@ export function EmployeeManagement() {
   const handleConfirmDelete = async () => {
     if (!employeeToDelete) return;
 
-    setSubmitError(null);
-
     try {
       await deactivateExistingEmployee(employeeToDelete.id);
+      showSuccess('Employee deactivated successfully');
       handleCloseDeleteConfirm();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to deactivate employee';
-      setSubmitError(errorMessage);
+      showError(errorMessage);
     }
   };
 
   const handleSubmitEmployee = async (data: EmployeeCreateRequest) => {
-    setSubmitError(null);
-
     try {
       if (editingEmployee) {
         await updateExistingEmployee(editingEmployee.id, data);
+        showSuccess('Employee updated successfully');
       } else {
         await createNewEmployee(data);
+        showSuccess('Employee created successfully');
       }
       handleCloseModal();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save employee';
-      setSubmitError(errorMessage);
+      showError(errorMessage);
     }
   };
 
@@ -111,6 +123,27 @@ export function EmployeeManagement() {
           </p>
         </div>
         <div className="flex gap-3">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={handleOpenSlackMapping}
+            className="flex items-center gap-2"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+              />
+            </svg>
+            Map Slack Users
+          </Button>
           <Button
             variant="outline"
             size="md"
@@ -193,6 +226,14 @@ export function EmployeeManagement() {
         onUploadSuccess={refetch}
       />
 
+      {/* Slack Mapping Modal */}
+      <SlackMappingModal
+        isOpen={isSlackMappingModalOpen}
+        onClose={handleCloseSlackMapping}
+        employees={employees as unknown as Employee[]}
+        onMappingComplete={handleSlackMappingComplete}
+      />
+
       {/* Delete Confirmation Modal */}
       <ConfirmationModal
         isOpen={!!employeeToDelete}
@@ -202,19 +243,6 @@ export function EmployeeManagement() {
         message={`Are you sure you want to deactivate "${employeeToDelete?.name}"? This action can be reverted by reactivating the employee.`}
         variant="warning"
       />
-
-      {/* Submit Error Modal */}
-      {submitError && (
-        <ConfirmationModal
-          isOpen={!!submitError}
-          onClose={() => setSubmitError(null)}
-          onConfirm={() => setSubmitError(null)}
-          title="Error"
-          message={submitError}
-          variant="danger"
-          confirmText="OK"
-        />
-      )}
     </div>
   );
 }

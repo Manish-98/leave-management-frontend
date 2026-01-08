@@ -92,3 +92,50 @@ export interface BulkUploadJob {
 export interface BulkUploadResultRow {
   [key: string]: string; // Dynamic keys based on CSV columns
 }
+
+/**
+ * Slack user from Slack API
+ */
+export interface SlackUser {
+  slackId: string;
+  name: string;
+  displayName: string;
+  email: string;
+  teamId: string;
+  isActive: boolean;
+  isBot: boolean;
+  deleted: boolean;
+}
+
+/**
+ * Slack user list response from API
+ */
+export interface SlackUserListResponse {
+  totalCount: number;
+  users: SlackUser[];
+}
+
+/**
+ * Match confidence level for Slack-to-employee mapping
+ */
+export type MatchConfidence = 'EXACT_EMAIL' | 'EXACT_NAME' | 'DISPLAY_NAME' | 'FUZZY_NAME' | 'NONE';
+
+/**
+ * Match suggestion for Slack-to-employee mapping
+ */
+export interface MatchSuggestion {
+  employee: Employee;
+  suggestedSlackUser: SlackUser | null;
+  confidence: MatchConfidence;
+  confidenceScore: number; // 0-100
+  alternativeSlackUsers: SlackUser[]; // Other potential matches
+}
+
+/**
+ * Mapping state for individual employee
+ */
+export interface EmployeeMappingState {
+  employeeId: string;
+  selectedSlackUser: SlackUser | null; // null means "skip"
+  action: 'APPROVE' | 'CHOOSE' | 'SKIP';
+}

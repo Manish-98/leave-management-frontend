@@ -1,7 +1,12 @@
 import { LeaveManagement } from './components/LeaveManagement';
+import { ToastProvider } from './contexts/ToastContext';
 
 function App() {
-  return <LeaveManagement />;
+  return (
+    <ToastProvider>
+      <LeaveManagement />
+    </ToastProvider>
+  );
 }
 
 export default App;
