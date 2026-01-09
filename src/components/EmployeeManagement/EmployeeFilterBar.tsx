@@ -26,11 +26,20 @@ export function EmployeeFilterBar({ filters, onFilterChange }: EmployeeFilterBar
     }
   };
 
-  const handleReset = () => {
-    onFilterChange({ name: undefined, active: undefined });
+  const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === 'all') {
+      onFilterChange({ region: undefined });
+    } else {
+      onFilterChange({ region: value as 'PUNE' | 'BANGALORE' | 'HYDERABAD' });
+    }
   };
 
-  const hasActiveFilters = filters.name || filters.active !== undefined;
+  const handleReset = () => {
+    onFilterChange({ name: undefined, active: undefined, region: undefined });
+  };
+
+  const hasActiveFilters = filters.name || filters.active !== undefined || filters.region !== undefined;
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
@@ -64,6 +73,24 @@ export function EmployeeFilterBar({ filters, onFilterChange }: EmployeeFilterBar
             <option value="all">All Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
+          </select>
+        </div>
+
+        {/* Region filter */}
+        <div className="min-w-[150px]">
+          <label htmlFor="region-filter" className="block text-sm font-medium text-gray-700 mb-1">
+            Region
+          </label>
+          <select
+            id="region-filter"
+            value={filters.region || 'all'}
+            onChange={handleRegionChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
+          >
+            <option value="all">All Regions</option>
+            <option value="PUNE">Pune</option>
+            <option value="BANGALORE">Bangalore</option>
+            <option value="HYDERABAD">Hyderabad</option>
           </select>
         </div>
 

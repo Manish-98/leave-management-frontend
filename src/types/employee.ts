@@ -50,6 +50,7 @@ export interface EmployeeDisplay extends Employee {
 export interface EmployeeFilters {
   name?: string;
   active?: boolean;
+  region?: 'PUNE' | 'BANGALORE' | 'HYDERABAD';
   sortBy?: string;
   sortDir?: 'asc' | 'desc';
 }

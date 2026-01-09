@@ -27,7 +27,9 @@ export function TableRow({ request, onApprove, onReject }: TableRowProps) {
     <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
       {/* Employee */}
       <td className="px-6 py-2">
-        <div className="text-sm font-medium text-gray-900">{request.userId}</div>
+        <div className="text-sm font-medium text-gray-900">
+          {request.employee?.name || 'Unknown'}
+        </div>
       </td>
 
       {/* Type */}

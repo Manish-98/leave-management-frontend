@@ -1,3 +1,5 @@
+import type { Employee } from './employee';
+
 // Leave Type (matches API)
 export const LeaveType = {
   ANNUAL_LEAVE: 'ANNUAL_LEAVE',
@@ -39,7 +41,7 @@ export interface SourceRef {
 // Leave Request from API
 export interface LeaveRequest {
   id: string;
-  userId: string;
+  employee: Employee | null;
   dateRange: DateRange;
   type: LeaveType;
   status: LeaveStatus;

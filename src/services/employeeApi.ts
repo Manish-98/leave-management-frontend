@@ -28,6 +28,7 @@ function buildQueryParams(
   if (filters) {
     if (filters.name) params.append('name', filters.name);
     if (filters.active !== undefined) params.append('active', filters.active.toString());
+    if (filters.region) params.append('region', filters.region);
     if (filters.sortBy) params.append('sortBy', filters.sortBy);
     if (filters.sortDir) params.append('sortDir', filters.sortDir);
   }
